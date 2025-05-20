@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.0)
 
+#SET(CMAKE_C_COMPILER /opt/arm-gnu-toolchain-11.3.rel1-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc)
+#SET(CMAKE_CXX_COMPILER /opt/arm-gnu-toolchain-11.3.rel1-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-g++)
+
+
 project(livox_sdk2)
 
 set(CMAKE_CXX_STANDARD 11)
+
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_C_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS "-O3")
 
 message(STATUS "main project dir: " ${PROJECT_SOURCE_DIR})
 

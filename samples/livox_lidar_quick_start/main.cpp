@@ -43,8 +43,8 @@ void PointCloudCallback(uint32_t handle, const uint8_t dev_type, LivoxLidarEther
   if (data == nullptr) {
     return;
   }
-  printf("point cloud handle: %u, data_num: %d, data_type: %d, length: %d, frame_counter: %d\n",
-      handle, data->dot_num, data->data_type, data->length, data->frame_cnt);
+//  printf("point cloud handle: %u, data_num: %d, data_type: %d, length: %d, frame_counter: %d\n",
+//      handle, data->dot_num, data->data_type, data->length, data->frame_cnt);
 
   if (data->data_type == kLivoxLidarCartesianCoordinateHighData) {
     LivoxLidarCartesianHighRawPoint *p_point_data = (LivoxLidarCartesianHighRawPoint *)data->data;
@@ -65,8 +65,8 @@ void ImuDataCallback(uint32_t handle, const uint8_t dev_type,  LivoxLidarEtherne
   if (data == nullptr) {
     return;
   } 
-  printf("Imu data callback handle:%u, data_num:%u, data_type:%u, length:%u, frame_counter:%u.\n",
-      handle, data->dot_num, data->data_type, data->length, data->frame_cnt);
+//  printf("Imu data callback handle:%u, data_num:%u, data_type:%u, length:%u, frame_counter:%u.\n",
+//      handle, data->dot_num, data->data_type, data->length, data->frame_cnt);
 }
 
 // void OnLidarSetIpCallback(livox_vehicle_status status, uint32_t handle, uint8_t ret_code, void*) {
@@ -173,8 +173,8 @@ void LidarInfoChangeCallback(const uint32_t handle, const LivoxLidarInfo* info, 
 void LivoxLidarPushMsgCallback(const uint32_t handle, const uint8_t dev_type, const char* info, void* client_data) {
   struct in_addr tmp_addr;
   tmp_addr.s_addr = handle;  
-  std::cout << "handle: " << handle << ", ip: " << inet_ntoa(tmp_addr) << ", push msg info: " << std::endl;
-  std::cout << info << std::endl;
+  //std::cout << "handle: " << handle << ", ip: " << inet_ntoa(tmp_addr) << ", push msg info: " << std::endl;
+ // std::cout << info << std::endl;
   return;
 }
 

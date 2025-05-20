@@ -29,7 +29,20 @@ bool is_save_log_file = false;
 bool is_console_log_enable = true;
 
 void InitLogger() {
-
+  char *log_level;
+  spdlog::level::level_enum spdlog_level = spdlog::level::warn;
+  log_level = getenv("LIDAR_LOG_LEVEL");
+  if (log_level != nullptr) {
+    if (0 == strcmp(log_level, "debug")) {
+      spdlog_level = spdlog::level::debug;
+    } else if (0 == strcmp(log_level, "info")) {
+      spdlog_level = spdlog::level::info;
+    } else if (0 == strcmp(log_level, "warn")) {
+      spdlog_level = spdlog::level::warn;
+    } else if (0 == strcmp(log_level, "error")) {
+      spdlog_level = spdlog::level::err;
+    }
+  }
   if (spdlog::get("console") != nullptr) {
     logger = spdlog::get("console");
     return;
@@ -38,20 +51,21 @@ void InitLogger() {
   std::vector<spdlog::sink_ptr> sinkList;
   if (is_console_log_enable) {
     auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    consoleSink->set_level(spdlog::level::debug);
+    consoleSink->set_level(spdlog_level);
     sinkList.push_back(consoleSink);
   }
 
   if (is_save_log_file) {
     auto rotateSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("livox_log.txt", 1024 * 1024 * 5, 2);
-    rotateSink->set_level(spdlog::level::debug);
+    rotateSink->set_level(spdlog_level);
     sinkList.push_back(rotateSink);
   }
 
   logger = std::make_shared<spdlog::logger>("console", begin(sinkList), end(sinkList));
   spdlog::register_logger(logger);
-  logger->set_level(spdlog::level::debug);
-  logger->flush_on(spdlog::level::debug);
+
+  logger->set_level(spdlog_level);
+  logger->flush_on(spdlog_level);
 }
 
 void UninitLogger() {

@@ -263,11 +263,24 @@ bool ParseLidarStateInfo::ParseStateInfo(const CommPacket& packet,
 
   // printf("Lidar state info, version_app:%s, version_load:%s, version_hardware:%s, mac:%s.\n",
   //     version_app.c_str(), version_load.c_str(), version_hardware.c_str(), mac.c_str());
-
-
-  // printf("Lidar state info, cur_work_state:%u, core_temp:%d, powerup_cnt:%u, local_time_now:%lu, last_sync_time:%lu, time_offset:%ld.\n",
-  //     info.cur_work_state, info.core_temp, info.powerup_cnt, info.local_time_now, info.last_sync_time, info.time_offset);
-  
+  const char * sync_info = NULL;
+  switch (info.time_sync_type) {
+    case 0:
+      sync_info = "NOT synchronized!";
+      break;
+    case 1:
+      sync_info = "Synchronized by PTP!";
+      break;
+    case 2:
+      sync_info = "Synchronized by GPS!";
+      break;
+  }
+   auto current_time = std::chrono::high_resolution_clock::now().time_since_epoch().count() * 1e-9;
+   printf("[synchronization info]: host_time_now: %f, "
+          "local_time_now: %f, last_sync_time:%f, offset: %.2fus, status: %s.",
+       current_time, info.local_time_now * 1e-9, info.last_sync_time * 1e-9,
+       info.time_offset * 1e-3, sync_info);
+   std::cout << std::endl;
   // printf("Lidar state info, time_sync_type:%u, fw_type:%u.\n", info.time_sync_type, info.fw_type);
 
   return true;
