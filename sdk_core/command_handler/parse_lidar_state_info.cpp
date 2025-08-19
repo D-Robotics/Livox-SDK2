@@ -23,7 +23,8 @@ bool ParseLidarStateInfo::Parse(const CommPacket& packet, std::string& info_str)
 
 bool ParseLidarStateInfo::ParseStateInfo(const CommPacket& packet,
                                          DirectLidarStateInfo& info,
-                                         std::set<ParamKeyName>& key_mask) {  
+                                         std::set<ParamKeyName>& key_mask) {
+  static double last_print_time = 0;                                           
   uint16_t offset = 0;
   uint16_t key_num = 0;
   memcpy(&key_num, &packet.data[offset], sizeof(uint16_t));
@@ -276,11 +277,15 @@ bool ParseLidarStateInfo::ParseStateInfo(const CommPacket& packet,
       break;
   }
    auto current_time = std::chrono::high_resolution_clock::now().time_since_epoch().count() * 1e-9;
-   printf("[synchronization info]: host_time_now: %f, "
+   if (current_time - last_print_time > 5.0) {
+     printf("[synchronization info]: host_time_now: %f, "
           "local_time_now: %f, last_sync_time:%f, offset: %.2fus, status: %s.",
        current_time, info.local_time_now * 1e-9, info.last_sync_time * 1e-9,
        info.time_offset * 1e-3, sync_info);
-   std::cout << std::endl;
+     std::cout << std::endl; 
+     last_print_time = current_time;
+   }
+
   // printf("Lidar state info, time_sync_type:%u, fw_type:%u.\n", info.time_sync_type, info.fw_type);
 
   return true;
@@ -722,8 +727,3 @@ void ParseLidarStateInfo::LivoxLidarStateInfoToJson(const DirectLidarStateInfo& 
 
 } // namespace livox
 } // namespace direct
-
-
-
-
-
